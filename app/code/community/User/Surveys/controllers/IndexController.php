@@ -71,6 +71,25 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
      * Surveys view action
      */
     
+    public function validateAction($cust_id, $id) {
+        /*echo '<pre>'; print($cust_id); echo '</pre>'; 
+        echo '<pre>'; print($id); echo '</pre>'; die("customer id ");*/
+        $data = Mage::getModel('user_surveys/surveys')
+        ->getCollection()
+        ->addFieldToFilter('form_id', array('eq' => $id))
+        ->addFieldToFilter('user_id', array('eq' => $cust_id));
+
+        if(count($data) > 0) {
+            //echo '<pre>'; print(count($data)); echo '</pre>'; die("customer_id");
+            $message = $this->__('Sorry, Survey form is already filled by you. Please fill another form.');
+            Mage::getSingleton('core/session')->addError($message);
+            //echo "<script type='text/javascript'>alert('$message');</script>";
+            session_write_close();
+            $this->_redirect('*/*/');
+        }
+        // echo '<pre>'; print(count($data)); echo '</pre>'; die("else");
+    }
+
     public function viewAction()
     {
     	$customerSession = Mage::getSingleton('customer/session');
@@ -78,17 +97,23 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
     	if (!$customerSession->isLoggedIn()) {
     		$this->_redirect('customer/account/login');
     	}
+        
+        $customer_id = Mage::getSingleton('customer/session')->getId();
+        //echo '<pre>'; print($customer_id); echo '</pre>'; die("customer_id");
+
+        $formId = $this->getRequest()->getParam('id');
+        
+        $this->validateAction($customer_id, $formId);
     
-    	$formId = $this->getRequest()->getParam('id');
-    	if (!$formId) {
-    		return $this->_forward('noRoute');
-    	}
+        if (!$formId) {
+            return $this->_forward('noRoute');
+        }
+
+        /** @var $model User_Surveys_Model_Surveys */
     
-    	/** @var $model User_Surveys_Model_Surveys */
-    
-    	$model = Mage::getModel('user_surveys/forms');
-    	$model->load($formId);
-    
+        $model = Mage::getModel('user_surveys/forms');
+        $model->load($formId);
+
     	/* End By Ankush Kumar*/
     
     	/*Start By Atul Pathak*/
@@ -111,10 +136,10 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
     	//echo "<pre>"; print_r($type); echo "</pre>"; //die("HERE");
     	//$type[]=  $collection->getType();
     	foreach ($options as $key => $value) {
-    	if($value) {
-    		$opt[$key] = explode(',',$value);
+    	   if($value) {
+    		  $opt[$key] = explode(',',$value);
     		}
-    		}
+    	}
     
     		// /echo "<pre>"; print_r($opt); echo "</pre>"; //die("HERE");
     		//die("HEre");
@@ -152,13 +177,17 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
     
     public function featuredSurveyAction()
     {
-            $customerSession = Mage::getSingleton('customer/session');
+        $customerSession = Mage::getSingleton('customer/session');
 
-            if (!$customerSession->isLoggedIn()) {
-                $this->_redirect('customer/account/login');
-            }
+        if (!$customerSession->isLoggedIn()) {
+            $this->_redirect('customer/account/login');
+        }
 
+        $customer_id = Mage::getSingleton('customer/session')->getId();
         $formId = $this->getRequest()->getParam('id');
+
+        $this->validateAction($customer_id, $formId);
+
         if (!$formId) {
             return $this->_forward('noRoute');
         }
@@ -222,12 +251,11 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
         $itemBlock->setFormAction( Mage::getUrl('*/*/post') );
         $this->renderLayout();
     }
-    
-    public function postAction()
 
+    public function postAction()
     {   
         $post = $this->getRequest()->getPost();
-        echo "<pre>"; print_r($post); echo "</pre>";
+        //echo "<pre>"; print_r($post); echo "</pre>"; die("HEREEEEEEEEEEEE");
         
         $questionIdForCheckBox;
         if ( $post ) {
