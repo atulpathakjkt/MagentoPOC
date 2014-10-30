@@ -255,8 +255,6 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
     public function postAction()
     {   
         $post = $this->getRequest()->getPost();
-        //echo "<pre>"; print_r($post); echo "</pre>"; die("HEREEEEEEEEEEEE");
-        
         $questionIdForCheckBox;
         if ( $post ) {
             $model = Mage::getModel('user_surveys/surveys');
