@@ -25,23 +25,44 @@
  */
 ?>
 <div class="page-title">
-    <h1><?php echo $this->__('Shopping Cart is Empty') ?></h1>
+    <h1><?php echo $this->__('Your order has been received.') ?></h1>
 </div>
-<div class="cart-empty">
-    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
-    <?php echo $this->getChildHtml('checkout_cart_empty_widget'); ?>
-    <p><?php echo $this->__('You have no items in your shopping cart.') ?></p>
-     
-    <?php 
-      $className = Mage::getConfig()->getBlockClassName('User_Surveys_Block_List');
-      $block = new $className(); 
-      $featuredId = $block->getItemUrl();
-    ?>
-	    
-    <p><?php echo $this->__('Click <a href="%s">here</a> to continue shopping.', $this->getContinueShoppingUrl()) ?></p>
-    <?php echo $this->getChildHtml('shopping.cart.table.after'); ?>
-</div>
- <?php 
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+
+<?php if ($this->getOrderId()):?>
+<?php if ($this->getCanViewOrder()) :?>
+    <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+<?php  else :?>
+    <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?></p>
+<?php endif;?>
+    <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+<?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
+    <p>
+        <?php echo $this->__('Click <a href="%s" onclick="this.target=\'_blank\'">here to print</a> a copy of your order confirmation.', $this->getPrintUrl()) ?>
+        <?php echo $this->getChildHtml() ?>
+    </p>
+<?php endif;?>
+<?php endif;?>
+
+<?php if ($this->getAgreementRefId()): ?>
+    <p><?php echo $this->__('Your billing agreement # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getAgreementUrl()), $this->escapeHtml($this->getAgreementRefId())))?></p>
+<?php endif;?>
+
+<?php if ($profiles = $this->getRecurringProfiles()):?>
+<p><?php echo $this->__('Your recurring payment profiles:'); ?></p>
+<ul class="disc">
+<?php foreach($profiles as $profile):?>
+<?php $profileIdHtml = ($this->getCanViewProfiles() ? sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getProfileUrl($profile)), $this->escapeHtml($this->getObjectData($profile, 'reference_id'))) : $this->escapeHtml($this->getObjectData($profile, 'reference_id')));?>
+    <li><?php echo $this->__('Payment profile # %s: "%s".', $profileIdHtml, $this->escapeHtml($this->getObjectData($profile, 'schedule_description')))?></li>
+<?php endforeach;?>
+</ul>
+<?php endif;?>
+
+<div class="buttons-set">
+    <button type="button" class="button" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+    
+     <?php 
       $className = Mage::getConfig()->getBlockClassName('User_Surveys_Block_List');
       $block = new $className(); 
       $featuredId = $block->getItemUrl();
@@ -49,6 +70,7 @@
     
 	<button type="button" class="button" title="<?php echo $this->__('Customer Survey') ?>" href="<?php echo Mage::getBaseUrl().'surveys/index/featuredSurvey/id/'.$featuredId; ?>"><span><span><?php echo $this->__('Customer Survey') ?></span></span></button>    
     
+
 <?php echo $this->getPager() ?>
     <?php    	
 		$jsTiny = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS) . 'surveys/tinybox.js';	
@@ -65,4 +87,4 @@
 		Event.observe(item, 'click', showloginbox);
 	});
 	</script>
-	
+</div>
