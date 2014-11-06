@@ -38,16 +38,20 @@
             <li>
                  <input name="user_id" type="hidden" value="<?php echo Mage::getSingleton('customer/session')->getId(); ?>" />
             </li>
+            
             <li>
-
-                <input name="form_id" type="hidden" value="<?php echo Mage::helper('user_surveys')->__($this->escapeHtml($_featuredItem->getId())) ?>" />
+				<input name="form_id" type="hidden" value="<?php echo Mage::helper('user_surveys')->__($this->escapeHtml($_featuredItem->getId())) ?>" />
             </li>
             <li>
                 
                 <?php $que= Mage::registry('questions');
                       $type= Mage::registry('type');
                       $options= Mage::registry('options');
-
+                      if(Mage::registry('in_popup')){
+                      	$in_popup = Mage::registry('in_popup');
+                      	echo '<input name="featured_popup" type="text" value="" />';
+                      }
+                      
                 ?>
 
                 <?php

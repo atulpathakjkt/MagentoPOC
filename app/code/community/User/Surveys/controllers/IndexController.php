@@ -152,11 +152,11 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
   
     public function featuredSurveyAction()
     {
-            $customerSession = Mage::getSingleton('customer/session');
+    	$customerSession = Mage::getSingleton('customer/session');
 
-            if (!$customerSession->isLoggedIn()) {
-                $this->_redirect('customer/account/login');
-            }
+        if (!$customerSession->isLoggedIn()) {
+            $this->_redirect('customer/account/login');
+        }
 
         $formId = $this->getRequest()->getParam('id');
         if (!$formId) {
@@ -193,7 +193,8 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
         Mage::register('questions', $question);
         Mage::register('type', $type);
         Mage::register('options', $opt);
-
+        Mage::register('in_popup', '1');
+		
         if (!$model->getId()) {
             return $this->_forward('noRoute');
         }
@@ -221,8 +222,7 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
 
     {   
         $post = $this->getRequest()->getPost();
-        echo "<pre>"; print_r($post); echo "</pre>";
-        
+
         $questionIdForCheckBox;
         if ( $post ) {
             $model = Mage::getModel('user_surveys/surveys');
@@ -264,7 +264,6 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
                 $data = implode(",", $value);
                 $newarr['checkbox_question-'.$key] = $data;
             }
-            echo "<pre>"; print_r($newarr); echo "</pre>";
 
             //saving checkbox values
             foreach ($newarr as $key => $value) {
@@ -286,7 +285,10 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
         }
         /*End By Atul Pathak*/
         Mage::getSingleton('core/session')->addSuccess("Thank You for participating in Survey.");
-
+    	if(isset($post['featured_popup'])){
+           $this->getResponse()->setBody('<script>top.location.reload();</script>');
+           return ;
+        }
         $this->_redirect('*/*/index');
     }
 

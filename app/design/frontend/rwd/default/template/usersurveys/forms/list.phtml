@@ -23,42 +23,7 @@
  * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-?>
-        <script type="text/javascript">
-        //<![CDATA[
-            document.observe("dom:loaded", closeit());
-
-            
-            function closeit(){
-            	//alert(window.parent.document.body.getElementById('bluemask').innerHTML);
-            	//parent.document.body.getElementById('bluemask').style.display = "none";
-            	//$('bluemask').hide();
-				jQuery.noConflict();
-				    (function ($) {
-				        function readyFn() {
-				            // Set your code here!!
-					var src = window.parent.document.body.innerHTML;
-					alert(src);
-					$.each(src, function(key, value) {
-						
-					});
-					//alert($(".user-surveys-index-index").parent().attr('id'));
-				        	//alert(window.parent.location);
-				        	//alert(document.getElementsById("frameless"));
-				            
-				        }
-				
-				        $(document).ready(readyFn); 
-				   0 })(jQuery);            	
-
-            	//parent.document.close();
-            	//parent.document.body.$("bluemask").css("display","none");
-            	//$('bluemask').setStyle({
-            	//	display: "none"
-                //})
-            }
-            //]]>
-        </script>
+?>   
 <div id="surveys_list_messages"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
 <div class="page-title">
     <h1><?php echo Mage::helper('user_surveys')->__('Survey Forms') ?></h1>
