@@ -33,20 +33,6 @@ class User_Surveys_Block_Adminhtml_Questions_Edit_Form extends Mage_Adminhtml_Bl
      */
     protected function _prepareForm()
     {   
-
-
-        /*die("HERE");
-        $model = Mage::helper('user_surveys')->getEventsItemInstance();
-        $formId = Mage::registry('formId');
-        $model = Mage::getModel('user_surveys/forms')->load($formId);
-        $surveys_item = Mage::registry('surveys_item');
-
-        $questions_ids = explode(',',$surveys_item['questions_id']);
-        
-        $collection = Mage::getModel('user_surveys/questions')->getCollection()->load();
-        $result= $collection->getItems();*/
-
-
         $questionId = $this->getRequest()->getParam('id');
         $model = Mage::getModel('user_surveys/questions')->load($questionId);
         
@@ -104,6 +90,4 @@ class User_Surveys_Block_Adminhtml_Questions_Edit_Form extends Mage_Adminhtml_Bl
 
         return parent::_prepareForm();
     }
-
-
 }

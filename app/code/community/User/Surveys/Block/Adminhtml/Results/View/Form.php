@@ -31,13 +31,12 @@ class User_Surveys_Block_Adminhtml_Results_View_Form extends Mage_Adminhtml_Bloc
      *
      * @return User_Surveys_Block_Adminhtml_News_Edit_Form
      */
-    protected function _prepareForm()
-    {
+    protected function _prepareForm() {
         $model = Mage::registry('viewModel');
 
 		$model->getSelect()->joinLeft(array('que' => 'surveys_questions'),
-				                      'main_table.question_id = que.id',
-									   array('surveys_questions' => 'questions'));
+									  'main_table.question_id = que.id',
+									  array('surveys_questions' => 'questions'));
 
         $form = new Varien_Data_Form(array(
             'id'      => 'edit_form',
@@ -45,10 +44,12 @@ class User_Surveys_Block_Adminhtml_Results_View_Form extends Mage_Adminhtml_Bloc
             'method'  => 'post',
             'enctype' => 'multipart/form-data'
         ));
+        
         $form->setUseContainer(true);
         $data = $model->getData();
         $userId = $data[0]['user_id'];
         $formId = $data[0]['form_id'];
+        
         $formModel= Mage::getModel('user_surveys/forms')->load($formId);
         $formName= $formModel->getFormName();
        
@@ -67,8 +68,8 @@ class User_Surveys_Block_Adminhtml_Results_View_Form extends Mage_Adminhtml_Bloc
         );
       
         foreach ($data as $key=>$value){
-        	$legendText = 'Question : '. $value['surveys_questions'].
-        			' Answer : '.$value['value'];
+        	$legendText = 'Question : '.$value['surveys_questions'].
+        				   ' Answer : '.$value['value'];
         	$fieldset->addField($value['question_id'], 'text', array(
         			'name'     => 'value'.$value['question_id'],
         			'value'    => $value['value'],
@@ -80,12 +81,8 @@ class User_Surveys_Block_Adminhtml_Results_View_Form extends Mage_Adminhtml_Bloc
         	));
         }
 
-  
         $form->setValues($data);
-
         $this->setForm($form);
-        
         return parent::_prepareForm();
     }
-
 }

@@ -144,11 +144,7 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
     /**
      * Surveys featured survey action
      */
-  public function testAction()
-  {
-  	return 3;
-  	
-  }
+
   
     public function featuredSurveyAction()
     {

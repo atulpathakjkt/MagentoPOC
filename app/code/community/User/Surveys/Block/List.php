@@ -71,6 +71,12 @@ class User_Surveys_Block_List extends Mage_Core_Block_Template
         return $data[0]['id'];
      }
     
+     /**
+     * Return URL to forms's view page
+     *
+     * @param User_Surveys_Model_Surveys $surveysItem
+     * @return string
+     */
      public function getFormUrl($featuredItemId)
      {
      	return $this->getUrl('*/*/view', array('id' => $featuredItemId));

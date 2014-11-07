@@ -32,13 +32,13 @@ class User_Surveys_Block_Adminhtml_Surveys_Edit_Form extends Mage_Adminhtml_Bloc
      */
     protected function _prepareForm()
     {
-        // $model = Mage::helper('user_surveys')->getEventsItemInstance();
+        
         $formId = Mage::registry('formId');
+
         $model = Mage::getModel('user_surveys/forms')->load($formId);
-        //echo "<pre>"; print_r($model['active']); echo "</pre>"; die("Hereeeee");
+
         $surveys_item = Mage::registry('surveys_item');
 
-        //$questions_ids = explode(',',$surveys_item['questions_id']);
         $questions_ids = explode(',',$surveys_item['questions_id']);
         
         $collection = Mage::getModel('user_surveys/questions')->getCollection()->load();
@@ -63,6 +63,7 @@ class User_Surveys_Block_Adminhtml_Surveys_Edit_Form extends Mage_Adminhtml_Bloc
                 'name' => 'id',
             ));
         }
+
         // Add the fields that we want to be editable.
         $fieldset->addField('form_name', 'text', array(
             'name'     => 'form_name',
@@ -107,6 +108,5 @@ class User_Surveys_Block_Adminhtml_Surveys_Edit_Form extends Mage_Adminhtml_Bloc
 
         return parent::_prepareForm();
     }
-
 }
 

@@ -26,140 +26,103 @@
 ?>
 
 <?php $_featuredItem = $this->helper('user_surveys')->getSurveysItemInstance(); ?>
+
     <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+    
     <div class="page-title">
         <h1 ><?php echo Mage::helper('user_surveys')->__($this->escapeHtml($_featuredItem->getFormName())) ?></h1>
     </div>
+
     <form action="<?php echo $this->getFormAction(); ?>" id="surveysForm" method="post" class="scaffold-form">
+    
     <div class="fieldset">
         <!-- <h2 class="legend"><?php echo Mage::helper('user_surveys')->__('User Reviews') ?></h2> -->
         <p class="required"><?php echo Mage::helper('user_surveys')->__('* Required Fields') ?></p>
+        
         <ul class="form-list">
             <li>
-                 <input name="user_id" type="hidden" value="<?php echo Mage::getSingleton('customer/session')->getId(); ?>" />
-            </li>
-            
-            <li>
-				<input name="form_id" type="hidden" value="<?php echo Mage::helper('user_surveys')->__($this->escapeHtml($_featuredItem->getId())) ?>" />
+                 <input name="user_id" type="hidden" value="<?php echo Mage::getSingleton('customer/session')->getId(); ?>"/>
             </li>
             <li>
-                
+				<input name="form_id" type="hidden" value="<?php echo Mage::helper('user_surveys')->__($this->escapeHtml($_featuredItem->getId())) ?>"/>
+            </li>
+            <li>
                 <?php $que= Mage::registry('questions');
                       $type= Mage::registry('type');
                       $options= Mage::registry('options');
+                      
                       if(Mage::registry('in_popup')){
                       	$in_popup = Mage::registry('in_popup');
-                      	echo '<input name="featured_popup" type="text" value="" />';
+                      	echo '<input name="featured_popup" type="hidden" value=""/>';
                       }
-                      
                 ?>
-
                 <?php
-                foreach($type as $key => $value) { 
-
-// If input type is TEXT
+                    foreach($type as $key => $value) {
+ 
+                //If input type is TEXT
                     switch ($value) {
-                        case "text":
-                        ?>
+                      case "text":
+                        ?>        
+                        <label for="question" ><b><?php echo $que[$key]?></b></label><br/>
                         
-                        <label for="question" ><b><?php echo $que[$key]?></b>
-                        </label>
-                        <br/>
                         <div class="input-box">
-                            <input name="question_<?php echo $key ?>" class="required" type="text" id="question_<?php echo $key ?>" title="<?php echo Mage::helper('user_surveys')->__('Question') ?>" class="input-text">
-                            <em>*</em></input>
-                        </div>
-                        <br/>
+                            <input name="question_<?php echo $key ?>" class="required" type="text" id="question_<?php echo $key ?>" title="<?php echo Mage::helper('user_surveys')->__('Question') ?>" class="input-text"></input>
+                        </div><br/>
+                        
+               <?php break; ?>
+               
+				<!-- If input type is TEXT AREA -->
+               <?php case "textarea": ?>
+                       <label for="question" ><b><?php echo $que[$key]?></b></label><br/>
+                       
+                       <div class="input-box">
+                            <textarea name="question_<?php echo $key ?>"  id="question_<?php echo $key ?>" title="<?php echo Mage::helper('user_surveys')->__('Question') ?>" class="input-text"></textarea>
+                       </div><br/>
+               <?php break; ?>
+
+				<!-- If input type is SELECT -->
+                <?php case "select": ?>
+                       <label for="question" ><b><?php echo $que[$key] ?></b></label><br/>
+
+                       <div class="input-box">
+                           <select name="question_<?php echo $key ?>"  id="question_<?php echo $key ?>" title="<?php echo Mage::helper('user_surveys')->__('Question') ?>" class="input-text">
                         <?php
-                        break;
-                        ?>
-
-<!-- If input type is TEXT AREA -->
-
-                        <?php
-                        case "textarea":
-                        ?>
-                        <label for="question" ><b><?php echo $que[$key]?></b>
-                        </label>
-                        <br/>
-                        <div class="input-box">
-                            <textarea name="question_<?php echo $key ?>"  id="question_<?php echo $key ?>" title="<?php echo Mage::helper('user_surveys')->__('Question') ?>" class="input-text">
-                            </textarea>
-                        </div>
-                        <br/>
-                        <?php
-                        break;
-                        ?>
-
-<!-- If input type is SELECT -->
-
-                        <?php
-                        case "select":
-                        ?>
-                        <label for="question" ><b><?php echo $que[$key] ?></b>
-                        </label><br/>
-
-                        <div class="input-box">
-                            <select name="question_<?php echo $key ?>"  id="question_<?php echo $key ?>" title="<?php echo Mage::helper('user_surveys')->__('Question') ?>" class="input-text">
-
-                            <?php
-                                foreach ($options as $opt => $val) {
-                                    if ($opt == $key) {
-                                        foreach ($val as $index => $output) { ?>
-                                            <option><?php echo $output ?></option>
-                                        <?php
-                                        }
-
-                                    }
-                                }
-                            ?>
-                            </select>
-                        </div>
-                        <br/>
-                        <?php
-                        break;
-                        ?>
-
-
-<!-- IF input type is MULTI SELECT -->
-
-                        <?php
-                        case "multiselect":
-                        ?>
-
-                        <label for="question" ><b><?php echo $que[$key] ?></b>
-                        </label><br/>
-
-                        <div class="input-box">
-                            <?php
-                                foreach ($options as $opt => $val) {
-                                    if ($opt == $key) { 
-                                        foreach ($val as $index => $output) { ?>
-                                            <input name="option_checked_<?php echo $index?>--<?php echo $key?>" type="checkbox" class="input-text" value="<?php echo $output ?>">&nbsp; &nbsp;<?php echo $output ?><br/>
+                            foreach ($options as $opt => $val) {
+                                 if ($opt == $key) {
+                                     foreach ($val as $index => $output) { ?>
+                                         <option><?php echo $output ?></option>
                                         <?php
                                         }
                                     }
                                 }
-                            ?>
-                            
+                             ?>
+                           </select>
+                       </div><br/>
+                <?php break; ?>
 
-                            <!-- <p style="color:red;"><i>You can select multiple values by holding CTRL (Control Button) and clicking options</i></p> -->
-                        </div>
-                        <br/>
-                        <?php
-                        break;
-                        ?>
+				<!-- IF input type is MULTI SELECT -->
+                <?php case "multiselect": ?>
+                       <label for="question" ><b><?php echo $que[$key] ?></b></label><br/>
 
-<!-- IF input type is BOOLEAN -->
+                       <div class="input-box">
+                           <?php
+                               foreach ($options as $opt => $val) {
+                                   if ($opt == $key) { 
+                                       foreach ($val as $index => $output) { ?>
+                                           <input name="option_checked_<?php echo $index?>--<?php echo $key?>" type="checkbox" class="input-text" value="<?php echo $output ?>">&nbsp; &nbsp;<?php echo $output ?><br/>
+                                       <?php
+                                       }
+                                   }
+                               }
+                           ?>
+                        </div><br/>
+                <?php break; ?>
 
-                        <?php
-                        case "boolean":
-                        ?>    
-                        <label for="question"><b><?php echo $que[$key]?></b>
-                        </label>
-                        <br/>
+				<!-- IF input type is BOOLEAN -->
+                <?php case "boolean": ?>    
+                        <label for="question"><b><?php echo $que[$key]?></b></label><br/>
+                        
                         <div class="input-box">
-
                             <?php
                                 foreach ($options as $opt => $val) {
                                     if ($opt == $key) { 
@@ -170,44 +133,43 @@
                                     }
                                 }
                             ?>
-                        </div>
-                        <br/>
-                        <?php
-
-                        break;
-/*if type is date*/
-                        case "date":
-                        ?>
-                        <label for="question" ><b><?php echo $que[$key]?></b>
-                        </label>
-                        <br/>
+                        </div><br/>
+				<?php break; ?> 
+				
+				<!--IF input type is DATE  -->
+				<?php case "date": ?>
+                        <label for="question" ><b><?php echo $que[$key]?></b></label><br/>
+                        
                         <div class="input-box">
                             <input type="date" readonly="true" name="question_<?php echo $key ?>" id="_dob" value="" />
                             <img id="_dob_trig" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN) . 'adminhtml/default/default/images/grid-cal.gif'; ?>"  class=""/>
                         </div>
-                        <script type="text/javascript">// <![CDATA[
-                        Calendar.setup({
-                            inputField : '_dob',
-                            ifFormat : '%e/%m/%y',
-                            button : '_dob_trig',
-                            align : 'Bl',
-                            singleClick : true
-                        });
-                        // ]]></script>
 
+                        <script type="text/javascript">
+                        // <![CDATA[
+	                        Calendar.setup({
+	                            inputField : '_dob',
+	                            ifFormat : '%e/%m/%y',
+	                            button : '_dob_trig',
+	                            align : 'Bl',
+	                            singleClick : true
+	                        }); 
+	                     // ]]>
+                        </script>
                         <br/>
-                        <?php
-                        break;
-                    }
-                }
-                ?>
+                <?php break;
+                    	}
+                	}
+               	?>
             </li>
         </ul>
     </div>
     
     <div class="buttons-set">
         <input type="text"  name="hideit" id="hideit" value="" style="display:none !important;" />
-        <button type="submit" title="<?php echo Mage::helper('user_surveys')->__('Submit') ?>" class="button"><span><span><?php echo Mage::helper('user_surveys')->__('Submit') ?></span></span></button>
+        <button type="submit" title="<?php echo Mage::helper('user_surveys')->__('Submit') ?>" 
+         class="button"><span><span><?php echo Mage::helper('user_surveys')->__('Submit') ?></span>
+        </span></button>
     </div>
 </form>
 

@@ -41,6 +41,5 @@ class User_Surveys_Block_Adminhtml_Surveys extends Mage_Adminhtml_Block_Widget_G
         } else {
             $this->_removeButton('add');
         }
-
     }
 }

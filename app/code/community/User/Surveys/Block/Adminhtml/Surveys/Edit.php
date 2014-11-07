@@ -65,8 +65,6 @@ class User_Surveys_Block_Adminhtml_Surveys_Edit extends Mage_Adminhtml_Block_Wid
         ";
     }
 
-
-
     /**
      * Retrieve text for header element depending on loaded page
      *
@@ -75,11 +73,12 @@ class User_Surveys_Block_Adminhtml_Surveys_Edit extends Mage_Adminhtml_Block_Wid
     public function getHeaderText()
     {
         $model = Mage::helper('user_surveys')->getSurveysItemInstance();
+        
         if ($model->getId()) {
             return Mage::helper('user_surveys')->__("Edit Survey Items",
                  $this->escapeHtml($model->getTitle()));
-        } else {
-
+        } 
+        else {
             return Mage::helper('user_surveys')->__('New Survey Form');
         }
     }
