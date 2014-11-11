@@ -57,6 +57,12 @@
         </reference>     
     </adminhtml_surveys_edit>
 
+     <adminhtml_surveys_getcode>
+        <reference name="content">
+            <block type="user_surveys/adminhtml_surveys_link_form" name="get_code"/>
+        </reference>        
+    </adminhtml_surveys_getcode>
+    
     <adminhtml_surveys_view>
         <reference name="content">
             <block type="user_surveys/adminhtml_results_view_form" name="view"/>
