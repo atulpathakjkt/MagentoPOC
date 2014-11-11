@@ -33,7 +33,6 @@
     <form action="<?php echo $this->getFormAction(); ?>" id="surveysForm" method="post" class="scaffold-form">
     <div class="fieldset">
         <!-- <h2 class="legend"><?php echo Mage::helper('user_surveys')->__('User Reviews') ?></h2> -->
-        <p class="required"><?php echo Mage::helper('user_surveys')->__('* Required Fields') ?></p>
         <ul class="form-list">
             <li>
                  <input name="user_id" type="hidden" value="<?php echo Mage::getSingleton('customer/session')->getId(); ?>" />
@@ -43,26 +42,28 @@
                 <input name="form_id" type="hidden" value="<?php echo Mage::helper('user_surveys')->__($this->escapeHtml($_featuredItem->getId())) ?>" />
             </li>
             <li>
-                
                 <?php $que= Mage::registry('questions');
-                      $type= Mage::registry('type');
-                      $options= Mage::registry('options');
-
+                    $type= Mage::registry('type');
+                    $options= Mage::registry('options');
+                      
+                    if(Mage::registry('in_popup')){
+                      	$in_popup = Mage::registry('in_popup');
+                      	echo '<input name="featured_popup" type="hidden" value=""/>';
+                    }
                 ?>
 
                 <?php
                 foreach($type as $key => $value) { 
 
-// If input type is TEXT
+					// If input type is TEXT
                     switch ($value) {
                         case "text":
                         ?>
-                        
-                        <label for="question" ><b><?php echo $que[$key]?></b>
+                        <label for="question" class="required" ><b><?php echo $que[$key]?></b>
                         </label>
                         <br/>
                         <div class="input-box">
-                            <input name="question_<?php echo $key ?>" class= "required-entry input-text" type="text" id="question_<?php echo $key ?>" title="<?php echo Mage::helper('user_surveys')->__('Question') ?>" class="">
+                            <input name="question_<?php echo $key ?>" class= "required-entry input-text" type="text" id="question_<?php echo $key ?>" title="<?php echo Mage::helper('user_surveys')->__('Question') ?>">
                             </input>
                         </div>
                         <br/>
@@ -71,8 +72,7 @@
                         ?>
 
 
-<!-- If input type is TEXT AREA -->
-
+						<!-- If input type is TEXT AREA -->
                         <?php
                         case "textarea":
                         ?>
@@ -89,8 +89,7 @@
                         ?>
 
 
-<!-- If input type is SELECT -->
-
+						<!-- If input type is SELECT -->
                         <?php
                         case "select":
                         ?>
@@ -118,9 +117,7 @@
                         break;
                         ?>
 
-
-<!-- IF input type is MULTI SELECT -->
-
+						<!-- IF input type is MULTI SELECT -->
                         <?php
                         case "multiselect":
                         ?>
@@ -148,8 +145,7 @@
                         break;
                         ?>
 
-<!-- IF input type is BOOLEAN -->
-
+						<!-- IF input type is BOOLEAN -->
                         <?php
                         case "boolean":
                         ?>    
@@ -167,17 +163,14 @@
                                         }
                                     }
                                 }
-                                        //die("FGFJ");
                             ?>
 
-                            <!-- <input type="radio" name="sex" value="male">Male<br>
-                            <input type="radio" name="sex" value="female">Female -->
                         </div>
                         <br/>
                         <?php
 
                         break;
-/*if type is date*/
+						/*if type is date*/
                         case "date":
                         ?>
                         <label for="question" class= "required"><b><?php echo $que[$key]?></b>

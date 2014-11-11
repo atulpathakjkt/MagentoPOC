@@ -36,7 +36,7 @@ class User_Surveys_Block_Adminhtml_Questions_Grid extends Mage_Adminhtml_Block_W
         $this->setSaveParametersInSession(true);
         $this->setUseAjax(true);
     }
-
+    
     /**
      * Prepare collection for Grid
      *
@@ -55,7 +55,6 @@ class User_Surveys_Block_Adminhtml_Questions_Grid extends Mage_Adminhtml_Block_W
      *
      * @return Mage_Adminhtml_Block_Catalog_Search_Grid
      */
-    
     protected function _prepareColumns()
     {
 

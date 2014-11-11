@@ -72,22 +72,19 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
      */
     
     public function validateAction($cust_id, $id) {
-        /*echo '<pre>'; print($cust_id); echo '</pre>'; 
-        echo '<pre>'; print($id); echo '</pre>'; die("customer id ");*/
         $data = Mage::getModel('user_surveys/surveys')
         ->getCollection()
         ->addFieldToFilter('form_id', array('eq' => $id))
         ->addFieldToFilter('user_id', array('eq' => $cust_id));
 
         if(count($data) > 0) {
-            //echo '<pre>'; print(count($data)); echo '</pre>'; die("customer_id");
             $message = $this->__('Sorry, Survey form is already filled by you. Please fill another form.');
+            
             Mage::getSingleton('core/session')->addError($message);
-            //echo "<script type='text/javascript'>alert('$message');</script>";
+          
             session_write_close();
-            $this->_redirect('*/*/');
+            $this->_redirect('*/*/index');
         }
-        // echo '<pre>'; print(count($data)); echo '</pre>'; die("else");
     }
 
     public function viewAction()
@@ -99,7 +96,7 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
     	}
         
         $customer_id = Mage::getSingleton('customer/session')->getId();
-        //echo '<pre>'; print($customer_id); echo '</pre>'; die("customer_id");
+
 
         $formId = $this->getRequest()->getParam('id');
         
@@ -108,15 +105,10 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
         if (!$formId) {
             return $this->_forward('noRoute');
         }
-
-        /** @var $model User_Surveys_Model_Surveys */
-    
+      
         $model = Mage::getModel('user_surveys/forms');
         $model->load($formId);
 
-    	/* End By Ankush Kumar*/
-    
-    	/*Start By Atul Pathak*/
     	$questionIds = explode(',',$model['questions_id']);
     	$question = array();
     	$type= array();
@@ -132,17 +124,12 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
     		$options[$value] = $collection->getOptions();
     
     	}
-    	//echo "<pre>"; print_r($type); echo "</pre>";
-    	//echo "<pre>"; print_r($type); echo "</pre>"; //die("HERE");
-    	//$type[]=  $collection->getType();
+    	
     	foreach ($options as $key => $value) {
     	   if($value) {
     		  $opt[$key] = explode(',',$value);
     		}
     	}
-    
-    		// /echo "<pre>"; print_r($opt); echo "</pre>"; //die("HERE");
-    		//die("HEre");
     
     		Mage::register('questions', $question);
     		Mage::register('type', $type);
@@ -173,26 +160,23 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
     
     /**
      * Surveys featured survey action
-     */
-    
+     */ 
     public function featuredSurveyAction()
     {
-        $customerSession = Mage::getSingleton('customer/session');
 
+        $customerSession = Mage::getSingleton('customer/session');
         if (!$customerSession->isLoggedIn()) {
             $this->_redirect('customer/account/login');
         }
 
         $customer_id = Mage::getSingleton('customer/session')->getId();
         $formId = $this->getRequest()->getParam('id');
-
+		
         $this->validateAction($customer_id, $formId);
 
         if (!$formId) {
             return $this->_forward('noRoute');
         }
-
-        /** @var $model User_Surveys_Model_Surveys */
         
         $model = Mage::getModel('user_surveys/forms');
         $model->load($formId);
@@ -212,23 +196,18 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
             $options[$value] = $collection->getOptions();
             
         }
-        //echo "<pre>"; print_r($type); echo "</pre>";
-        //echo "<pre>"; print_r($type); echo "</pre>"; //die("HERE");  
-        //$type[]=  $collection->getType();
+       
         foreach ($options as $key => $value) {
             if($value) {
                 $opt[$key] = explode(',',$value);
             }
         }
 
-        // /echo "<pre>"; print_r($opt); echo "</pre>"; //die("HERE");  
-        //die("HEre");
-        
-
         Mage::register('questions', $question);
         Mage::register('type', $type);
         Mage::register('options', $opt);
-
+        Mage::register('in_popup', '1');
+		
         if (!$model->getId()) {
             return $this->_forward('noRoute');
         }
@@ -274,7 +253,6 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
                     $model->save();
                 }
 
-                //getting questionIds for checkbox
                 if (preg_match('/option_/',$key)) {
                     $checkbox_que_array = explode("--", $key);
                     $questionIdForCheckBox[] = $checkbox_que_array[1];
@@ -296,9 +274,6 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
                 $data = implode(",", $value);
                 $newarr['checkbox_question-'.$key] = $data;
             }
-            echo "<pre>"; print_r($newarr); echo "</pre>";
-
-            //saving checkbox values
             foreach ($newarr as $key => $value) {
                 $userId= $post['user_id'];
                 $formId= $post['form_id'];
@@ -316,9 +291,11 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
                 $model->save();
             }            
         }
-        /*End By Atul Pathak*/
         Mage::getSingleton('core/session')->addSuccess("Thank You for participating in Survey.");
-
+    	if(isset($post['featured_popup'])){
+           $this->getResponse()->setBody('<script>top.location.reload();</script>');
+           return ;
+        }
         $this->_redirect('*/*/index');
     }
 

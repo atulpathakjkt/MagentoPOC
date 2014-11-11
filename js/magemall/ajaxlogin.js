@@ -1,19 +1,19 @@
 function onepageLogin(button)
 {
-	var loginForm = button.up('form');
-    if(loginForm.validator && loginForm.validator.validate()){
-        button.disabled = true;
-        loginForm.request({
-      	  onComplete: function(){ alert('Form data saved!'); }
-      	});
-      	return false;
-    }
+var loginForm = button.up('form');
+if(loginForm.validator && loginForm.validator.validate()){
+button.disabled = true;
+loginForm.request({
+onComplete: function(){ alert('Form data saved!'); }
+});
+return false;
 }
 
+}
 function bindLoginPost(evt){
-    if (evt.keyCode == Event.KEY_RETURN) {
-    	onepageLogin(Event.element(evt));
-    }
+if (evt.keyCode == Event.KEY_RETURN) {
+onepageLogin(Event.element(evt));
+}
 }
 
 function showLogin(url) {
@@ -25,8 +25,3 @@ function showloginbox() {
 	showLogin(G_AJAXLOGIN_URL);
 	return false;
 }
-
-
-
-
-
