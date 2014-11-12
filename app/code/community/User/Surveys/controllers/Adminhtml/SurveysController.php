@@ -131,7 +131,7 @@ class User_Surveys_Adminhtml_SurveysController extends Mage_Adminhtml_Controller
 
         // check if data sent
         $data = $this->getRequest()->getPost();
-        echo "<pre>"; print_r($data); echo "</pre>"; 
+        //echo "<pre>"; print_r($data); echo "</pre>"; 
         if ($data) {
             $data = $this->_filterPostData($data);
             // init model and set data

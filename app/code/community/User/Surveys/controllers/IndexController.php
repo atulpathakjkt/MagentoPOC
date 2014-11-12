@@ -144,32 +144,32 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action
     		// /echo "<pre>"; print_r($opt); echo "</pre>"; //die("HERE");
     		//die("HEre");
     
-    		Mage::register('questions', $question);
-    		Mage::register('type', $type);
-    		Mage::register('options', $opt);
+		Mage::register('questions', $question);
+		Mage::register('type', $type);
+		Mage::register('options', $opt);
+
+		if (!$model->getId()) {
+		return $this->_forward('noRoute');
+        }
     
-    		if (!$model->getId()) {
-    		return $this->_forward('noRoute');
+        Mage::register('surveys_item', $model);
+        
+        Mage::dispatchEvent('before_surveys_item_display', array('surveys_item' => $model));
+        
+        $this->loadLayout();
+        		$itemBlock = $this->getLayout()->getBlock('forms.item');
+            if ($itemBlock) {
+                $listBlock = $this->getLayout()->getBlock('forms.list');
+        if ($listBlock) {
+        $page = (int)$listBlock->getCurrentPage() ? (int)$listBlock->getCurrentPage() : 1;
+        } else {
+        $page = 1;
+        }
+        $itemBlock->setPage($page);
+        }
+        $itemBlock->setFormAction( Mage::getUrl('*/*/post') );
+        $this->renderLayout();
     }
-    
-    Mage::register('surveys_item', $model);
-    
-    Mage::dispatchEvent('before_surveys_item_display', array('surveys_item' => $model));
-    
-    $this->loadLayout();
-    		$itemBlock = $this->getLayout()->getBlock('forms.item');
-        if ($itemBlock) {
-            $listBlock = $this->getLayout()->getBlock('forms.list');
-    if ($listBlock) {
-    $page = (int)$listBlock->getCurrentPage() ? (int)$listBlock->getCurrentPage() : 1;
-    } else {
-    $page = 1;
-    }
-    $itemBlock->setPage($page);
-    }
-    $itemBlock->setFormAction( Mage::getUrl('*/*/post') );
-    $this->renderLayout();
-  }
     
     /**
      * Surveys featured survey action
