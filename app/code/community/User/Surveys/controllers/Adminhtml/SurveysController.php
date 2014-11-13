@@ -125,7 +125,8 @@ class User_Surveys_Adminhtml_SurveysController extends Mage_Adminhtml_Controller
         $redirectPath   = '*/*';
         $message = 'Created';
         $redirectParams = array();
-        
+        $flag;
+
         // check if data sent
         $data = $this->getRequest()->getPost(); 
         if ($data) {
@@ -161,15 +162,13 @@ class User_Surveys_Adminhtml_SurveysController extends Mage_Adminhtml_Controller
             $visibility= $data['visibility'];
 
             foreach ($model->getCollection()->getData() as $key => $value){
-            	//             	echo '<pre>'; print_r($value['form_name']); echo '</pre>';
-            	if($formName == $value['form_name']) {
-            		$this->_getSession()->addError(
-            				Mage::helper('user_surveys')->__('Form name already exists. Please fill another form name.'));
-            		$this->_redirect($redirectPath, $redirectParams);
-            		goto end;
-            	}
+                //echo '<pre>'; print_r($value['form_name']); echo '</pre>';
+                if($formName == $value['form_name']) {
+                    $flag= 1;
+                    break;
+                    // $this->_redirect($redirectPath, $redirectParams);
+                }
             }
-            
             if ($visibility == 1) {
                 $collection = Mage::getModel('user_surveys/forms')
                 ->getCollection()
@@ -190,7 +189,14 @@ class User_Surveys_Adminhtml_SurveysController extends Mage_Adminhtml_Controller
                 else {
                     $model = Mage::getModel('user_surveys/forms');
                 }
-                if($formName == '' || $ids == '') {
+
+                if($flag == 1) {
+                    $this->_getSession()->addError(
+                            Mage::helper('user_surveys')->__('Form name already exists. Please fill another form name.'));
+                    $this->_redirect($redirectPath, $redirectParams);
+                }
+
+                elseif($formName == '' || $ids == '') {
                 	$this->_getSession()->addError(
                 			Mage::helper('user_surveys')->__('Please select atleast one question and form name'));
                 	$this->_redirect($redirectPath, $redirectParams);
@@ -208,7 +214,15 @@ class User_Surveys_Adminhtml_SurveysController extends Mage_Adminhtml_Controller
             }
             else {
                 // Saving to Model
-            	if($formName == '' || $ids == '') {
+                /*echo '<pre>'; print($flag); echo '</pre>';
+                die("HWERFG");*/
+                if($flag == 1) {
+                    $this->_getSession()->addError(
+                            Mage::helper('user_surveys')->__('Form name already exists. Please fill another form name.'));
+                    $this->_redirect($redirectPath, $redirectParams);
+                }
+
+            	elseif($formName == '' || $ids == '') {
             		$this->_getSession()->addError(
             		Mage::helper('user_surveys')->__('Please select atleast one question and form name'));
             		$this->_redirect($redirectPath, $redirectParams);
