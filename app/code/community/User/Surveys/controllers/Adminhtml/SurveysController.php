@@ -74,8 +74,7 @@ class User_Surveys_Adminhtml_SurveysController extends Mage_Adminhtml_Controller
     {
         $this->_title($this->__('Surveys'))
              ->_title($this->__('Manage Surveys'));
-
-       
+     
         $model = Mage::getModel('user_surveys/forms');
 
         // 2. if exists id, check it and load data
@@ -135,7 +134,6 @@ class User_Surveys_Adminhtml_SurveysController extends Mage_Adminhtml_Controller
             // init model and set data
             /* @var $model User_Surveys_Model_Item */
             $model = Mage::getModel('user_surveys/forms');
-            
             $formId = $this->getRequest()->getParam('id');
          	if ($formId) {
 				$model->load($formId);
@@ -160,15 +158,16 @@ class User_Surveys_Adminhtml_SurveysController extends Mage_Adminhtml_Controller
             $status= $data['status'];
             
             $visibility= $data['visibility'];
+            
+            $formData = Mage::getModel('user_surveys/forms')->getCollection()
+            ->addFieldToFilter('id', array('neq' => $formId))->getData();
 
-            foreach ($model->getCollection()->getData() as $key => $value){
-                //echo '<pre>'; print_r($value['form_name']); echo '</pre>';
-                if($formName == $value['form_name']) {
-                    $flag= 1;
-                    break;
-                    // $this->_redirect($redirectPath, $redirectParams);
+            foreach ($formData as $key => $value) {
+                if ($value['form_name'] == $formName) {
+                    $flag = 1;
                 }
             }
+            
             if ($visibility == 1) {
                 $collection = Mage::getModel('user_surveys/forms')
                 ->getCollection()
@@ -244,7 +243,7 @@ class User_Surveys_Adminhtml_SurveysController extends Mage_Adminhtml_Controller
         }
         
         $this->_redirect($redirectPath, $redirectParams);
-        end:
+
     }
 
 

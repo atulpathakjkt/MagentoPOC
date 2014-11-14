@@ -48,7 +48,6 @@ class User_Surveys_IndexController extends Mage_Core_Controller_Front_Action {
             ->setBeforeAuthUrl(Mage::helper('core/url')->getCurrentUrl());    		
 		}		
 		
-
 		$listBlock = $this->getLayout ()->getBlock ( 'forms.list' );
 		if ($listBlock) {
 			$currentPage = abs ( intval ( $this->getRequest ()->getParam ( 'p' ) ) );
